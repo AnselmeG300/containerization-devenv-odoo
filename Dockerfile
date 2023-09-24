@@ -8,10 +8,10 @@ USER root
 RUN mkdir -p /mnt/extra-addons/custom-addons && chmod -R o+rX /mnt/extra-addons/custom-addons
 
 # Nous copions nos modules personnalises implementes dans le respertoire contenant les modules personnalises dans notre image
-COPY costum_addons/ /mnt/extra-addons/custom-addons/
+ADD costum_addons/ /mnt/extra-addons/custom-addons/
 
 # Nous copions nos configuration systeme dans l'image afin qu'il soit prise en compte au lancement d'Odoo
-COPY odoo.conf /etc//
+COPY config/odoo.conf /etc/odoo/
 
 # Nous nous mettons odoo
 USER odoo
