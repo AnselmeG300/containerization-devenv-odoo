@@ -3,31 +3,34 @@ version: '3'
 
 # Configuration de nos services odoo et postgres 
 services:
-  odoo: # Configuration de notre service Odoo
-    image: eazy-odoo:1.0.0 # Nom de notre image personnalisée
-    build: # Nous construisons notre image à partir de notre Dockerfile 
-      dockerfile: ./Dockerfile
-      context: .
-    env_file: .env # Nous utilisons le fichier .env pour définir nos variables d'environnements pour connecter Odoo a la base de données
+  odoo: 
+    image: odoo:15
+    container_name: eazy-odoo-15
+    env_file: .env 
     depends_on: 
-      - postgres # L'exécution de notre service dépend de celui de postgres
+      - postgres 
     ports:
-      - "8069:8069" # Le port 8069 est exposé pour accéder à l'application Odoo 
+      - "8069:8069" 
     networks:
-      - eazycnet # Définition du réseau dans lequel notre service communiquera
+      - eazycnet 
     volumes:
-      - data:/var/lib/odoo # Définition d'un volume pour persister nos logs lors de l'exécution de l'application Odoo 
-  postgres: # Configuration de notre service PostgreSQL
-    image: postgres:13 # Image postgres 13 récupérée dans le Docker hub
-    env_file: .env # Nous utilisons le fichier .env pour définir nos variables d'environnements pour se connecter à la base de données
+      - data:/var/lib/odoo 
+      - ./config:/etc/odoo
+      - ./costum_addons:/mnt/extra-addons:ro,cached
+    restart: always
+
+  postgres: 
+    image: postgres:15
+    container_name: eazy-db-15
+    env_file: .env 
     ports:
-      - "5432:5432" # Le port 5432 est exposé pour accéder à notre base de données
+      - "5432:5432"
     networks:
-      - eazycnet # Définition du reseau dans lequel notre service communiquera
+      - eazycnet 
     volumes:
-      - db:/var/lib/postgresql/data # Définition d'un volume pour persister nos données sauvegardées
-volumes: # Création de nos volumes
+      - db:/var/lib/postgresql/data
+volumes: 
   data:
   db:
-networks: # Création du réseau
+networks: 
   eazycnet:
